@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Suid</title>
+  <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown-light.min.css"/-->
+  <link rel="stylesheet" href="./css/github.css"/>
+  <link rel="stylesheet" href="./css/help.css"/>
+</head>
+<body>
+<nav class="ayuda-navbar">
+  <div style="display: flex; align-items: center; padding-left: 18px; gap: 10px;">
+    <!--img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Iconic_image_of_a_lightning_bolt.svg" alt="Logo EDES" style="height:32px; width:auto; display:inline-block; vertical-align:middle;"-->
+    <span style="font-size:1.8rem; font-weight:bold; color:#24292f; letter-spacing:2px;">SUID</span>
+  </div>
+  <div class="ayuda-navbar-menu">
+    <a href="help.html" class="ayuda-link active">Inicio</a>
+    <a href="label.html" class="ayuda-link">Etiquetas</a>
+    <a href="language.html" class="ayuda-link">Lenguaje</a>
+    <a href="example.html" class="ayuda-link">Ejemplos</a>
+  </div>
+</nav>
+  <div class="flex-github">
+    <div class="sidebar-github">
+      <div id="index-content" class="markdown-body">Cargando índice…</div>
+    </div>
+    <div class="content-github">
+      <div id="main-content" class="markdown-body">Selecciona una opción del índice.</div>
+    </div>
+  </div>
+  <script src="./js/marked.min.js"></script>
+  <script src="./js/help.js"></script>
+  <script>
+    const menuIndex = './src/index/help.md';
+    cargaMenu();
+  </script>
+</body>
+</html>

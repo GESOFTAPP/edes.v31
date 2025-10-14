@@ -1,0 +1,91 @@
+[Title]    # DOCUMENTO/S 
+
+[DBTable]  documento
+[DBIndex]  cd_documento
+[DBSerial] cd_documento
+[DBOrder]  fe_publicacion desc
+
+[AddOption] * | cd_tipo_documento | ,; 9,Informe; 1,Modificación 2,Acuerdo; 3,Colectivo; 4,Borrador; 6,Reglamento; 7,Revisión
+
+[ColsWidth] ,350
+[PDFCol]    ,70,,,,,,,,,0
+[PDFWrap] 4
+[PDFVar] PDF_Grid = true
+[THColSpan] fe_resolucion,fe_publicacion,FECHA | fe_ini_amb,fe_fin_amb,VIGENCIA | cd_boletin,pagina,BOLETIN
+
+[PHPIni] *
+	$DirConv = eScript('//documento_htm/');
+
+[Format]
+	global $DirConv, $_User, $_Development;
+	$Doc = '';
+	$nDoc = trim($_vF[0]);
+	if(file_exists($DirConv."htm/{$nDoc}.htm" ) ) $Doc .= 'H';
+	if(file_exists($DirConv."pdf/{$nDoc}.pdf" ) ) $Doc .= 'P';
+	if( $Doc=='' ){
+		$_vF[10] = "<img src='g/cnv_0.gif'>";
+	}else{
+		$_vF[10] = "<img src='g/cnv_1.gif' onclick=\"MenuConv('{$Doc}')\">";
+	}
+
+[PHPIni] l
+	$documento = explode('=',str_replace('"','',$_FILTER));
+	$_TITLE = 'DOCUMENTOS  "'.stripslashes($documento[1]).'"';
+
+
+[Fields]
+    Codigo            | cd_documento                 | +  | T |   9 || *  |||
+    Descripción       | titulo                       | X  | T | 255 || MQ |||
+    TIPO<br>DOCUMENTO | cd_tipo_documento			 | N  | SV|  18 || M  |||
+    RESOLUCIÓN        | fe_resolucion                | F4 | T |  10 || M  |||
+    PUBLICACIÓN       | fe_publicacion               | F4 | T |  10 || M  |||
+    Inicio            | fe_ini_amb                   | F4 | T |  10 || M  |||
+    Final             | fe_fin_amb                   | F4 | T |  10 || M  |||
+    Tipo              | cd_boletin                   | 0  | S |   2 || MQ |||
+    Número            | num_boletin                  | +  | T |   7 || M  |||
+    Página            | pagina                       | +  | T |   7 || M  |||
+    DOC.              | num_boletin as ico           | F4 | T |  10 || M  |||
+
+[JSEnd] l
+function MenuConv( Doc ){
+	if( Doc=='' ) return;
+	document.all.MenuDocumento.Documento = event.srcElement.parentElement.parentElement.cells[0].innerText.replace(/\s/g,'');
+	var Obj = document.all.MenuDocumento.cells;
+	var ncel=0;
+	for( var n=0; n<4; n++ ){
+		if( Doc.indexOf( 'LUHP'.substr(n,1) ) > -1 ){
+			Obj[n].style.display = 'block';
+			ncel++;
+		}else{
+			Obj[n].style.display = 'none';
+		}
+	}
+	with( document.all.MenuDocumento.style ){
+		top = event.clientY + document.body.scrollTop;
+		left = event.clientX - 25*ncel; // - 25*ncel
+		display = 'block';
+	}
+}
+
+function VerDocumento(){
+	event.cancelBubble=true;
+	var Obj = event.srcElement;
+	if( Obj.tagName=='TD' ){
+		if( Obj.uDir=='co' ){
+			top.eWOpen('[=]Documento,edes.php?E:/'+'/documento_htm/'+Obj.uDir +'/'+ document.all.MenuDocumento.Documento+'.'+Obj.uExt+'&TITLE='+Obj.uExt,'','',true);
+		}else{
+			top.eCallSrv(window,'edes.php?D:/'+'/documento_htm/'+Obj.uDir +'/'+ document.all.MenuDocumento.Documento+'.'+Obj.uExt+'&TITLE='+Obj.uExt);
+		}
+	}
+}
+
+
+
+
+[HTMEnd] l
+<TABLE id=MenuDocumento onclick=VerDocumento() onselectstart='return false;' onmouseleave='this.style.display="none"' cellspacing=0 cellpadding=2 style='display:none; position:absolute; border-right: solid black 1px; background:#fffbf0;'>
+<tr>
+<td uExt='htm' uDir='htm' style="border-left: solid black 1px;border-top: solid black 1px;border-bottom: solid black 1px;">HTM</td>
+<td uExt='pdf' uDir='pdf' style="border-left: solid black 1px;border-top: solid black 1px;border-bottom: solid black 1px;">PDF</td>
+</tr>
+</TABLE>
